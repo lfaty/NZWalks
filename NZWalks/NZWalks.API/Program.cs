@@ -18,6 +18,7 @@ builder.Services.AddDbContext<NZWalksDbContext>(options => options.UseSqlServer(
 // Configuration des interfaces et leurs implementations
 builder.Services.AddScoped<IRegionRepository, RegionRepository>();
 builder.Services.AddScoped<IWalkRepository, WalkRepository>();
+builder.Services.AddScoped<IWalkDifficultyRepository, WalkDifficultyRepository>();
 
 // Configuration des mapping donnees entre source et destination
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
