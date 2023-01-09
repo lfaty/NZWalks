@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NZWalks.API.Models.DTO;
 using NZWalks.API.Repositories;
+using System.Data;
 
 namespace NZWalks.API.Controllers
 {
@@ -23,6 +25,7 @@ namespace NZWalks.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "reader")]
         public async Task<IActionResult> GetAllWalks()
         {
             // Fetch data from database - domain walks
@@ -39,6 +42,7 @@ namespace NZWalks.API.Controllers
         [HttpGet]
         [Route("{id:guid}")]
         [ActionName("GetWalkAsync")]
+        [Authorize(Roles = "reader")]
         public async Task<IActionResult> GetWalkAsync(Guid id)
         {
             // Get Walk Domain object from database
@@ -52,6 +56,7 @@ namespace NZWalks.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> AddWalkAsync([FromBody] Models.DTO.AddWalkRequest addWalkRequest)
         {
             // Validate the incoming request
@@ -88,6 +93,7 @@ namespace NZWalks.API.Controllers
 
         [HttpPut]
         [Route("{id:guid}")]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> UpdateWalkAsync([FromRoute] Guid id,
             [FromBody] Models.DTO.UpdateWalkRequest updateWalkRequest)
         {
@@ -130,6 +136,7 @@ namespace NZWalks.API.Controllers
 
         [HttpDelete]
         [Route("{id:guid}")]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> DeleteWalkAsync(Guid id)
         {
             var walkDomain = await walkRepository.DeleteAsync(id);
@@ -147,25 +154,26 @@ namespace NZWalks.API.Controllers
 
         private async Task<bool> ValidateAddWalkAsync(Models.DTO.AddWalkRequest addWalkRequest)
         {
-            if (addWalkRequest == null)
-            {
-                ModelState.AddModelError(nameof(addWalkRequest),
-                    $"{nameof(addWalkRequest)} cannot be empty.");
-                return false;
-            }
+            /*
+           if (addWalkRequest == null)
+           {
+               ModelState.AddModelError(nameof(addWalkRequest),
+                   $"{nameof(addWalkRequest)} cannot be empty.");
+               return false;
+           }
 
-            if (string.IsNullOrWhiteSpace(addWalkRequest.Name))
-            {
-                ModelState.AddModelError(nameof(addWalkRequest.Name),
-                    $"{nameof(addWalkRequest.Name)} is required.");
-            }
+           if (string.IsNullOrWhiteSpace(addWalkRequest.Name))
+           {
+               ModelState.AddModelError(nameof(addWalkRequest.Name),
+                   $"{nameof(addWalkRequest.Name)} is required.");
+           }
 
-            if (addWalkRequest.Length <= 0)
-            {
-                ModelState.AddModelError(nameof(addWalkRequest.Length),
-                    $"{nameof(addWalkRequest.Length)} should be greater than zero.");
-            }
-
+           if (addWalkRequest.Length <= 0)
+           {
+               ModelState.AddModelError(nameof(addWalkRequest.Length),
+                   $"{nameof(addWalkRequest.Length)} should be greater than zero.");
+           }
+           */
             var region = await regionRepository.GetAsync(addWalkRequest.RegionId);
             if (region == null)
             {
@@ -190,6 +198,7 @@ namespace NZWalks.API.Controllers
 
         private async Task<bool> ValidateUpdateWalkAsync(Models.DTO.UpdateWalkRequest updateWalkRequest)
         {
+            /*
             if (updateWalkRequest == null)
             {
                 ModelState.AddModelError(nameof(updateWalkRequest),
@@ -208,7 +217,7 @@ namespace NZWalks.API.Controllers
                 ModelState.AddModelError(nameof(updateWalkRequest.Length),
                     $"{nameof(updateWalkRequest.Length)} should be greater than zero.");
             }
-
+            */
             var region = await regionRepository.GetAsync(updateWalkRequest.RegionId);
             if (region == null)
             {
